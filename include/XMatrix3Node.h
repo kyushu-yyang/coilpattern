@@ -16,6 +16,9 @@ class XMatrix3Node
     /// @brief deconstructor
     ~XMatrix3Node();
 
+    /// @brief setup the order of gauss quad
+    void SetOrderOfGauss(const int ngauss);
+
     /// @brief setup mesh of mandrel
     void SetMeshInfo(XMeshHandle2* handle) { fHandle = handle; }
 

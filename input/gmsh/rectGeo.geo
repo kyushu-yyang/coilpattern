@@ -17,6 +17,7 @@ Transfinite Curve {4} = 50 Using Progression 1;
 
 Extrude {{0, 1, 0}, {0, 0, 0}, Pi/16} { Curve{1,2,3,4}; Layers{75}; }
 
-Physical Curve("boundary", 13) = {11, 12, 7, 9, 3, 4, 1, 2};
-Physical Surface("surface", 14) = {3, 4, 1, 2};
+Physical Curve("bc1", 12) = { 1, 2,3,4};
+Physical Curve("bc2", 13) = {11,12,7,9};
+Physical Surface("surface", 14) = {3,4,1,2};
 

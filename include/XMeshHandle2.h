@@ -10,7 +10,7 @@ using namespace std;
 
 // @file   XMeshHandle2.h
 // @author Y.Yang (QST)
-// @date   2022.04.26 (created)
+// @date   2022.04.26
 
 class XMeshHandle2
 {
@@ -29,6 +29,15 @@ class XMeshHandle2
 
     /// @brief return the node surrounding the element
     vector<XElement3Node*> GetSurroundingElements(const int node);
+
+    /// @brief return the boundary id and label
+    void GetListOfBoundary(VectorXi& nodeId, VectorXi& bcLabel);
+
+    /// @brief return boundary labels
+    vector<int> GetBoundaryLabels();
+
+    /// @brief return the node at the given boundary
+    vector<int> GetNodeIdAtBoundary(const int label);
 
     /// @brief return the number of nodes
     int GetNumOfNodes() const { return fNode.size(); }
@@ -60,6 +69,9 @@ class XMeshHandle2
 
     /// @brief print out the elements surrounding the given node
     void print_elements_sur();
+
+    /// @brief search for the node at the boundary
+    vector<int> search_node_at_boundary();
 
   private:
     vector<XNode*> fNode;

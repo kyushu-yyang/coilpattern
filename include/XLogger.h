@@ -56,9 +56,7 @@ class XLogger
 #define _OUTPUT_ERROR(level, message)                \
   do {                                               \
     XLogger* log = XLogger::GetInstance();           \
-    log->GetLogStream(level) << message << " "       \
-      << std::setprecision(6) << std::setw(6)        \
-      << std::setfill(' ') << std::endl;             \
+    log->GetLogStream(level) << message << std::endl;\
   } while(0)
 #endif
 
@@ -66,8 +64,8 @@ class XLogger
   #define ERROR_OUTPUT true
 #endif
 
-#ifndef Error
-#define Error(level, message)                        \
+#ifndef Logger
+#define Logger(level, message)                       \
   do {                                               \
     if (ERROR_OUTPUT){                               \
       _OUTPUT_ERROR(level, message);                 \
@@ -77,28 +75,28 @@ class XLogger
 #ifndef Debug
 #define Debug(message)                               \
   do {                                               \
-    Error(XLogger::DEBUG, message);                  \
+    Logger(XLogger::DEBUG, message);                 \
   } while(0)
 #endif
 
 #ifndef Fatal
 #define Fatal(message)                               \
   do {                                               \
-    Error(XLogger::ERROR, message);                  \
+    Logger(XLogger::ERROR, message);                 \
   } while(0)
 #endif
 
 #ifndef Warning
 #define Warning(message)                             \
   do {                                               \
-    Error(XLogger::WARNING, message);                \
+    Logger(XLogger::WARNING, message);               \
   } while(0)
 #endif
 
 #ifndef Info
 #define Info(message)                                \
   do {                                               \
-    Error(XLogger::INFO, message);                   \
+    Logger(XLogger::INFO, message);                  \
   } while(0)
 #endif
   

@@ -8,6 +8,7 @@
 #include "XElement3Node.h"
 #include "XMatrix3Node.h"
 #include "XSolveTSVD.h"
+#include "XLogger.h"
 
 using namespace std;
 using namespace Eigen;
@@ -224,6 +225,9 @@ void test(const char* filename)
 
 int main(int argc, char** argv)
 {
+  XLogger* log = XLogger::GetInstance();
+  log->Start(XLogger::DEBUG, "debug_.log");
+
   try {
     test(argv[1]);
   }
@@ -231,6 +235,8 @@ int main(int argc, char** argv)
     cerr << except.what() << endl;
     return EXIT_FAILURE;
   }
+
+  log->Stop();
 
   return EXIT_SUCCESS;
 }

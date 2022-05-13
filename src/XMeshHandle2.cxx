@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
-//#include <boost/log/trivial.hpp>
 #include "XMeshHandle2.h"
+#include "XLogger.h"
 
 XMeshHandle2 :: XMeshHandle2()
 {}
@@ -24,11 +24,6 @@ void XMeshHandle2 :: SetVtkFile(XVtkFile* file)
   setup_nodes(file);
   setup_boundaries(file);
   setup_elements(file);
-
-  // debug
-  cout << "First element:" << fElement.at(0)->GetId() << ", Nodes in element:("
-      << fElement.at(0)->GetNode(0)->GetId() << "," << fElement.at(0)->GetNode(1)->GetId() << ","
-      << fElement.at(0)->GetNode(2)->GetId() << ")" << endl;
 }
 
 vector<XElement3Node*> XMeshHandle2 :: GetSurroundingElements(const int node)
@@ -97,20 +92,23 @@ void XMeshHandle2 :: setup_boundaries(XVtkFile* file)
 {
   const int numOfCells = file->GetNumOfCells();
   vector<int> node;
-  int type, id;
+  int type, label;
   int cnt = 0;
 
   for (int i=0; i<numOfCells; i++) {
-    file->GetCellInfo( i, node, type, id );
+    file->GetCellInfo( i, node, type, label );
 
     // search for the boundary
-    if (id>0 && node.size()==2) { 
-      fNode.at(node.at(0))->AtBoundary(true); 
-      fNode.at(node.at(1))->AtBoundary(true);
+    if (label>0 && node.size()==2) { 
+      fNode.at(node.at(0))->AtBoundary(label); 
+      fNode.at(node.at(1))->AtBoundary(label);
 
       cout << "FOUND BOUNDARY AT CELL" << setw(5) << fixed << cnt << ":"
            << setw(6) << fixed << node.at(0)
            << setw(6) << fixed << node.at(1) << endl; 
+      Debug( "BOUNDARY CELL" << setw(5) << fixed << cnt << ":"
+                             << setw(6) << fixed << node.at(0)
+                             << setw(6) << fixed << node.at(1) );
       cnt ++;
     }
   }
@@ -226,4 +224,76 @@ void XMeshHandle2 :: print_elements_sur()
 
     cout << "\n";
   }
+}
+
+vector<int> XMeshHandle2 :: search_node_at_boundary()
+{
+  vector<int> node_id;
+  
+  for (int i=0; i<fNode.size(); i++) {
+    if (fNode.at(i)->Is_AtBoundary())
+      node_id.push_back( fNode.at(i)->GetId() );
+  }
+
+  return node_id;
+}
+
+void XMeshHandle2 :: GetListOfBoundary(VectorXi& nodeId, VectorXi& bcLabel)
+{
+  // search for the node at boundary
+  vector<int> nodes = search_node_at_boundary();
+
+  // initialize the vectors
+  nodeId = VectorXi :: Zero( nodes.size() );
+  bcLabel= VectorXi :: Zero( nodes.size() );
+
+  // fill the vectors
+  for (int i=0; i<nodes.size(); i++) {
+    nodeId (i) = nodes.at(i);
+    bcLabel(i) = fNode.at(nodes.at(i))->GetBoundaryId();
+  }
+}
+
+vector<int> XMeshHandle2 :: GetBoundaryLabels()
+{
+  bool is_exist;
+  VectorXi nodeId, bcLabel;
+  vector<int> nodes;
+
+  // search for the node id and boundary label at bc
+  GetListOfBoundary( nodeId, bcLabel );
+
+  // push back the labels
+  for (int i=0; i<bcLabel.size(); i++) {
+    is_exist = false;
+
+    for (int j=0; j<nodes.size(); j++) {
+      if (nodes.at(j)==bcLabel(i)) {
+        is_exist = true;
+        break;
+      }
+    }
+
+    if (!is_exist)
+      nodes.push_back( bcLabel(i) );
+  }
+
+  return nodes;
+}
+
+vector<int> XMeshHandle2 :: GetNodeIdAtBoundary(const int label)
+{
+  vector<int> nodes;
+  VectorXi nodeId, bcLabel;
+
+  // search for the node id and boundary label at bc
+  GetListOfBoundary( nodeId, bcLabel );
+
+  // push back the nodes
+  for (int i=0; i<nodeId.size(); i++) {
+    if (label==bcLabel(i))
+      nodes.push_back( nodeId(i) );
+  }
+
+  return nodes;
 }

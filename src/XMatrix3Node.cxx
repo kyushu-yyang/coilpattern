@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include "XLogger.h"
 #include "XMeshHandle2.h"
 #include "XMatrix3Node.h"
 
@@ -15,27 +16,45 @@ XMatrix3Node :: XMatrix3Node()
   fGaussX(1,0) = 0.211324865; fGaussX(1,1) = 0.622008467; fGaussW(1) = 0.197168783; 
   fGaussX(2,0) = 0.788675134; fGaussX(2,1) = 0.044658198; fGaussW(2) = 0.052831216; 
   fGaussX(3,0) = 0.788675134; fGaussX(3,1) = 0.166666667; fGaussW(3) = 0.052831216; 
-
-  // n = 3
-  /*
-  fGaussX = MatrixXd :: Zero(9,2);
-  fGaussW = VectorXd :: Zero(9);
-
-  fGaussX(0,0) = 0.112701665; fGaussX(0,1) = 0.100000000; fGaussW(0) = 0.068464377; 
-  fGaussX(1,0) = 0.112701665; fGaussX(1,1) = 0.443649167; fGaussW(1) = 0.109543004; 
-  fGaussX(2,0) = 0.112701665; fGaussX(2,1) = 0.787298334; fGaussW(2) = 0.068464377; 
-  fGaussX(3,0) = 0.500000000; fGaussX(3,1) = 0.056350832; fGaussW(3) = 0.061728395; 
-  fGaussX(4,0) = 0.500000000; fGaussX(4,1) = 0.250000000; fGaussW(4) = 0.098765432; 
-  fGaussX(5,0) = 0.500000000; fGaussX(5,1) = 0.443649167; fGaussW(5) = 0.061728395; 
-  fGaussX(6,0) = 0.887298334; fGaussX(6,1) = 0.012701665; fGaussW(6) = 0.008696116; 
-  fGaussX(7,0) = 0.887298334; fGaussX(7,1) = 0.056350832; fGaussW(7) = 0.013913785; 
-  fGaussX(8,0) = 0.887298334; fGaussX(8,1) = 0.100000000; fGaussW(8) = 0.008696116; 
-  */
 }
 
 XMatrix3Node :: ~XMatrix3Node()
 {
   if (fHandle) delete fHandle;
+}
+
+void XMatrix3Node :: SetOrderOfGauss(const int ngauss)
+{
+  if (ngauss==1) {
+    fGaussX = MatrixXd :: Zero(1,2);
+    fGaussW = VectorXd :: Zero(1);
+
+    fGaussX(0,0) = 1./3.; fGaussX(0,1) = 1./3.; fGaussW(0) = 0.5;
+  }
+  else if (ngauss==3) {
+    fGaussX = MatrixXd :: Zero(9,2);
+    fGaussW = VectorXd :: Zero(9);
+
+    fGaussX(0,0) = 0.112701665; fGaussX(0,1) = 0.100000000; fGaussW(0) = 0.068464377; 
+    fGaussX(1,0) = 0.112701665; fGaussX(1,1) = 0.443649167; fGaussW(1) = 0.109543004; 
+    fGaussX(2,0) = 0.112701665; fGaussX(2,1) = 0.787298334; fGaussW(2) = 0.068464377; 
+    fGaussX(3,0) = 0.500000000; fGaussX(3,1) = 0.056350832; fGaussW(3) = 0.061728395; 
+    fGaussX(4,0) = 0.500000000; fGaussX(4,1) = 0.250000000; fGaussW(4) = 0.098765432; 
+    fGaussX(5,0) = 0.500000000; fGaussX(5,1) = 0.443649167; fGaussW(5) = 0.061728395; 
+    fGaussX(6,0) = 0.887298334; fGaussX(6,1) = 0.012701665; fGaussW(6) = 0.008696116; 
+    fGaussX(7,0) = 0.887298334; fGaussX(7,1) = 0.056350832; fGaussW(7) = 0.013913785; 
+    fGaussX(8,0) = 0.887298334; fGaussX(8,1) = 0.100000000; fGaussW(8) = 0.008696116; 
+  }
+
+  // debug 
+  Info("CHANGED THE NUMBER OF GAUSS POINTS FOR INTEGRATION.");
+  Info(   setw(14) << setprecision(6) << fixed << "XI_I"
+       << setw(14) << setprecision(6) << fixed << "ETA_I"
+       << setw(14) << setprecision(6) << fixed << "WEIGHT" );
+  for (int i=0; fGaussW.size(); i++) 
+    Info(   setw(14) << setprecision(6) << fixed << fGaussX(i,0)
+         << setw(14) << setprecision(6) << fixed << fGaussX(i,1)
+         << setw(14) << setprecision(6) << fixed << fGaussW(i) );
 }
 
 void XMatrix3Node :: SetNumOfTargetMesh(const int num)

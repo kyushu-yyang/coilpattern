@@ -3,37 +3,11 @@
 
 #include <Eigen/Dense>
 #include <vector>
+#include "XNode.h" 
 
 using namespace Eigen;
 using namespace std;
 
-class XNode
-{
-  public:
-    XNode() { fXYZ(0)=0.; fXYZ(1)=0.; fXYZ(2)=0.; }
-    ~XNode() {}
-    void SetId(const int num) { id = num; }
-    int  GetId() const { return id; }
-    void   SetPoint(const double xx, const double yy, const double zz) { fXYZ(0)=xx; fXYZ(1)=yy; fXYZ(2)=zz; }
-    void   SetX(const double xx) { fXYZ(0)=xx; }
-    void   SetY(const double yy) { fXYZ(1)=yy; }
-    void   SetZ(const double zz) { fXYZ(2)=zz; }
-    double GetX() const { return fXYZ(0); }
-    double GetY() const { return fXYZ(1); } 
-    double GetZ() const { return fXYZ(2); }
-    Vector3d GetPoint() { return fXYZ; }
-    Vector3d GetPositionVector(const double x, const double y, const double z);
-    double   GetDistance(const double x, const double y, const double z);
-    void   AtBoundary(const bool bc) { fNodeAtBC = bc; }
-    bool   Is_AtBoundary() { return fNodeAtBC; }
-
-  private:
-    int    id{-99};
-    Vector3d fXYZ;
-    bool   fNodeAtBC{false};
-};
-
-/**************************************************/
 class XElement3Node
 {
   public:
@@ -51,6 +25,12 @@ class XElement3Node
 
     /// @brief return the id of element
     int  GetId() const { return fId; }
+
+    /// @brief setup surface id
+    void SetSurfaceId(const int id) { fSurfId = id; }
+
+    /// @brief return surface id
+    int  GetSurfaceId() const { return fSurfId; }
 
     /// @brief setup the node point
     void SetNode(const int id, XNode* pts) { fNode.at(id) = pts; }
@@ -85,7 +65,8 @@ class XElement3Node
     Vector3d GetLoopBasisVector(const int node);
 
   private:
-    double fId;
+    int fId;
+    int fSurfId;
     vector<XNode*> fNode;
 };
 

@@ -1,14 +1,24 @@
 #include <iostream>
 #include <iomanip>
+#include "XLogger.h"
 #include "XFieldStraightLine.h"
+
+using namespace std;
 
 XFieldStraightLine :: XFieldStraightLine()
   : fFlag( -99),
     fNmax(   8),
     fRy0 (-99.),
     fRy1 (-99.),
-    fMu_r(1e+3)
+    fMu_r(1e+3),
+    fCart(false)
 {}
+
+void XFieldStraightLine :: CartesianCoordinate()
+{
+  fCart = true;
+  Info( "SWITCHED THE FIELD COORDINATE TO CARTESIAN COORDINATE." );
+}
 
 void XFieldStraightLine :: SetPoint(const int idx, const double x, const double y, const double curr)
 {
@@ -25,6 +35,53 @@ void XFieldStraightLine :: SetPoint(const int idx, const double x, const double 
   fPoints(idx, 3) = atan2( y, x ); 
 
   fCurr(idx) = curr;
+
+  // debug
+  if (idx==0) 
+    Debug( "APPENDING THE SOURCE POINT AND CURRENT." );
+  else
+    Debug( setw(5) << fixed << idx << setw(15) << setprecision(6) << scientific << x
+                                   << setw(15) << setprecision(6) << scientific << y
+                                   << setw(10) << setprecision(2) << fixed << curr );
+}
+
+Vector2d XFieldStraightLine :: GetMagneticField(const double x, const double y)
+{
+  Vector2d field(0.,0.);
+
+  double r, phi, br, bphi;
+  int model = 1000000;
+
+  // select the model
+  if      (fRy0<0 && fRy1<0) model = 0;
+  else if (fRy0>0 && fRy1<0) model = 1;
+  else if (fRy0>0 && fRy1>0) model = 2;
+
+  // coordinate transformation
+  r   = sqrt(x*x + y*y);
+  phi = atan2(y,x);
+
+  // calculate field
+  switch (model) {
+    case 0: calc_field_from_wire(r, phi, br, bphi); break;
+    case 1: calc_field_infinite_yoke(r, phi, fRy0, fMu_r, br, bphi); break;
+    case 2: calc_field_shell_yoke(r, phi, fRy0, fRy1, fMu_r, br, bphi); break;
+    default: Fatal( "NO MODEL IS SELECTED FOR FIELD CALCULATION." );
+             Fatal( "MODEL ID:" << model );
+             break;
+  }
+
+  // coordinate transformation for field
+  if (fCart) {
+    field(0) = cos(phi)*br - sin(phi)*bphi;
+    field(1) = sin(phi)*br + cos(phi)*bphi;
+  }
+  else {
+    field(0) = br;
+    field(1) = bphi;
+  }
+
+  return field;
 }
 
 void XFieldStraightLine :: calc_field_from_wire(const double r, const double phi, double& br, double& bphi)

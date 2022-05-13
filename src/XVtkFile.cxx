@@ -2,9 +2,11 @@
 #include <iomanip>
 #include <fstream>
 #include "XVtkFile.h"
+#include "XLogger.h"
 
 XVtkFile :: XVtkFile(const char* filename)
 {
+  Info("VTK INPUT FILE: " << filename << "."); 
   Load(filename);
 }
 
@@ -14,12 +16,16 @@ void XVtkFile :: Load(const char* filename)
   vector<vector<string>> dataline;
   read_input_file( filename, dataline );
 
+  Info("CHECK NODE POINTS.");
   fill_points_vector( dataline );
 
+  Info("CHECK ELEMENTS.");
   fill_cells_vector( dataline );
 
+  Info("CHECK TYPE OF ELEMENT.");
   fill_cell_types( dataline );
 
+  Info("CHECK BOUNDARIES AND SURFACES.");
   fill_surface_and_boundary( dataline );
 
   // check types of cell
@@ -33,6 +39,7 @@ void XVtkFile :: read_input_file(const char* filename, vector<vector<string>>& t
   // check file exists or not
   if ( !inputfile.is_open() ) {
     cerr << "ERROR: Could not open the file - " << filename << endl;
+    Fatal("CANNOT OPEN THE VTK FILE: " << filename << ".");
     throw invalid_argument("could not open the file.");
   }
 
@@ -70,6 +77,8 @@ void XVtkFile :: fill_points_vector(const vector<vector<string>>& dataline)
 
   cout << " - TOTAL NUMBER OF POINTS: " << npoints << endl;
   cout << " - RANGE OF POINTS LINE: (" << start << "," << start+npoints << ")" << endl;
+  Info("READING THE POINTS FROM LINE " << start << " TO LINE " << start+npoints << ".");
+  Info("TOTAL NUMBER OF POINTS: " << npoints << ".");
 
   // fill the array of point
   for (int i=start; i<start+npoints; i++) {
@@ -97,6 +106,8 @@ void XVtkFile :: fill_cells_vector(const vector<vector<string>>& dataline)
 
   cout << " - TOTAL NUMBER OF CELLS: " << ncells << endl;
   cout << " - RANGE OF CELLS LINE: (" << start << "," << start+ncells << ")" << endl;
+  Info("READING THE ELEMENTS FROM LINE " << start << " TO LINE " << start+ncells << ".");
+  Info("TOTAL NUMBER OF ELEMENTS: " << ncells << ".");
 
   // fill the array of cell
   for (int i=start; i<start+ncells; i++) {
@@ -132,6 +143,8 @@ void XVtkFile :: fill_cell_types(const vector<vector<string>>& dataline)
 
   cout << " - TOTAL NUMBER OF CELL TYPES: " << ncells << endl;
   cout << " - RANGE OF CELL TYPE LINE: (" << start << "," << start+ncells << ")" << endl;
+  Info("READING THE TYPES FROM LINE " << start << " TO LINE " << start+ncells << ".");
+  Info("TOTAL NUMBER OF TYPES: " << ncells << ".");
 
   // fill the array of cell type
   for (int i=start; i<start+ncells; i++)
@@ -153,6 +166,8 @@ void XVtkFile :: fill_surface_and_boundary(const vector<vector<string>>& datalin
 
   cout << " - TOTAL NUMBER OF CELL ID: " << ncells << endl;
   cout << " - RANGE OF CELL ID LINE: (" << start << "," << start+ncells << ")" << endl;
+  Info("READING THE ELEMENT ID FROM LINE " << start << " TO LINE " << start+ncells << ".");
+  Info("TOTAL NUMBER OF ELEMENT ID: " << ncells << ".");
 
   // fill the array of cell type
   if (start>0) {

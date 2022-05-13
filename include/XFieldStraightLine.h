@@ -24,6 +24,9 @@ class XFieldStraightLine
     /// @brief return the flag
     int  GetFlag() const { return fFlag; }
 
+    /// @brief switch the coordinate to Cartesian coordinate
+    void CartesianCoordinate();
+
     /// @brief setup the limitation of the order for the sum up of field
     void SetMaxOrder(const int nmax) { fNmax = nmax; }
 
@@ -35,6 +38,9 @@ class XFieldStraightLine
 
     /// @brief setup the point in two dimension
     void SetPoint(const int idx, const double x, const double y, const double curr=1.);
+    
+    /// @brief return the calculated magnetic field
+    Vector2d GetMagneticField(const double x, const double y);
 
   protected:
     /// @brief calculate the two-dimensional magnetic field derived from strainght line conductor
@@ -52,6 +58,7 @@ class XFieldStraightLine
     double   fRy0;
     double   fRy1;
     double   fMu_r;
+    bool     fCart;
     MatrixXd fPoints;
     VectorXd fCurr;
 

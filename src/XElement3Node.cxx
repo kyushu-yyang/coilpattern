@@ -3,25 +3,8 @@
 #include <stdexcept>
 #include "XElement3Node.h"
 
-Vector3d XNode :: GetPositionVector(const double x, const double y, const double z)
-{
-  Vector3d vec(0.,0.,0.);
-  vec(0) = x - fXYZ(0);
-  vec(1) = y - fXYZ(1);
-  vec(2) = z - fXYZ(2);
-  return vec;
-}
-
-double XNode :: GetDistance(const double x, const double y, const double z)
-{
-  Vector3d vec = GetPositionVector(x,y,z);
-  return vec.norm();
-}
-
-/**********************************************************/
-
 XElement3Node :: XElement3Node()
-  : fId(-99)
+  : fId(-99), fSurfId(-99)
 {
   fNode.push_back( nullptr );
   fNode.push_back( nullptr );
