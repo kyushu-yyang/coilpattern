@@ -7,6 +7,10 @@ using namespace Eigen;
 
 class XMeshHandle2;
 
+/// @file   XMatrix3Node.h
+/// @author Ye Yang (QST)
+/// @date   04.15.2022
+
 class XMatrix3Node
 {
   public:

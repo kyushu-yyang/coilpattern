@@ -106,9 +106,10 @@ void XMeshHandle2 :: setup_boundaries(XVtkFile* file)
       cout << "FOUND BOUNDARY AT CELL" << setw(5) << fixed << cnt << ":"
            << setw(6) << fixed << node.at(0)
            << setw(6) << fixed << node.at(1) << endl; 
-      Debug( "BOUNDARY CELL" << setw(5) << fixed << cnt << ":"
-                             << setw(6) << fixed << node.at(0)
-                             << setw(6) << fixed << node.at(1) );
+      Debug( "BOUNDARY CELL" << setw(5) << fixed << cnt << ": ("
+                             << setw(5) << fixed << node.at(0) << ") --- ("
+                             << setw(5) << fixed << node.at(1) << "), BC LABEL:"
+                             << setw(4) << fixed << label );
       cnt ++;
     }
   }

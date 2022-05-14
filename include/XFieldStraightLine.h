@@ -37,7 +37,10 @@ class XFieldStraightLine
     void SetRelativePermeability(const double mu_r) { fMu_r = mu_r; }
 
     /// @brief setup the point in two dimension
-    void SetPoint(const int idx, const double x, const double y, const double curr=1.);
+    void SetPoint(const double x, const double y, const double curr=1.);
+
+    /// @brief return the source points in cartesian coordinate
+    void GetSourcePoint(double&x, double& y) { x = fPoints(0); y = fPoints(1); }
     
     /// @brief return the calculated magnetic field
     Vector2d GetMagneticField(const double x, const double y);
@@ -58,10 +61,9 @@ class XFieldStraightLine
     double   fRy0;
     double   fRy1;
     double   fMu_r;
+    double   fCurr;
     bool     fCart;
-    MatrixXd fPoints;
-    VectorXd fCurr;
-
+    VectorXd fPoints;
 };
 
 #endif

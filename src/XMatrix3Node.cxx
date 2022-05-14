@@ -91,9 +91,9 @@ Vector3d XMatrix3Node :: calc_bn_element(const int n_id, XElement3Node* element,
   Vector3d jn = element->GetLoopBasisVector(n_id);
 
   // calculate the current vector at boundary
-  int node_idx = element->GetBoundaryNodeIndex();
-  if (node_idx>0)
-    jn += element->GetLoopBasisVector( element->GetNode(node_idx)->GetId() );
+  //int node_idx = element->GetBoundaryNodeIndex();
+  //if (node_idx>0)
+  //  jn += element->GetLoopBasisVector( element->GetNode(node_idx)->GetId() );
 
   Vector3d bi;
   
@@ -111,12 +111,11 @@ Vector3d XMatrix3Node :: calc_bn_element_gauss(const int n_id, XElement3Node* el
   Vector3d rs;
 
   Vector3d jn = element->GetLoopBasisVector(n_id);
-  //const double dS = element->GetArea();
   
   // calculate the current vector at boundary
-  int node_idx = element->GetBoundaryNodeIndex();
-  if (node_idx>0)
-    jn += element->GetLoopBasisVector( element->GetNode(node_idx)->GetId() );
+  //int node_idx = element->GetBoundaryNodeIndex();
+  //if (node_idx>0)
+  //  jn += element->GetLoopBasisVector( element->GetNode(node_idx)->GetId() );
 
   for (int i=0; i<fGaussW.size(); i++) {
     // setup gauss points
