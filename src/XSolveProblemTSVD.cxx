@@ -72,7 +72,7 @@ void XSolveProblemTSVD :: Write(const string filename)
     output << setw(6) << fixed << i
            << setw(14) << setprecision(6) << scientific << fPtg(i) << endl; 
 
-  output << "MAGNETIC FIELD " << fBtar.size() << endl;
+  output << "MODE OF MAGNETIC FIELD " << fBtar.size() << endl;
   output << setw(14) << "X" << setw(14) << "Y";
   for (int i=0; i<fNmax; i++)
     output << setw(15) << i;
@@ -88,12 +88,12 @@ void XSolveProblemTSVD :: Write(const string filename)
     output << "\n";
   }
 
-  output << "CURRENT " << fIvec.rows() << " " << fIvec.cols() << endl;
+  output << "MODE OF CURRENT " << fIvec.rows() << " " << fIvec.cols() << endl;
 
   if (fFlag.size()!=0)
     output << setw(5 ) << "FLAG"
            << setw(15) << "XS"
-           << setw(15) << "YS" << endl;
+           << setw(15) << "YS";
 
   for (int i=0; i<fNmax; i++)
     output << setw(15) << i;

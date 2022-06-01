@@ -31,7 +31,7 @@ class XFieldStraightLine
     void SetMaxOrder(const int nmax) { fNmax = nmax; }
 
     /// @brief setup the radius of iron yoke
-    void SetIronYokeRadius(const double r0, const double r1);
+    void SetIronYokeRadius(const double r0, const double r1) { fRy0 = r0; fRy1 = r1; }
 
     /// @brief setup the relative permeability for iron yoke
     void SetRelativePermeability(const double mu_r) { fMu_r = mu_r; }
@@ -43,17 +43,17 @@ class XFieldStraightLine
     void GetSourcePoint(double&x, double& y) { x = fPoints(0); y = fPoints(1); }
     
     /// @brief return the calculated magnetic field
-    Vector2d GetMagneticField(const double x, const double y);
+    Vector3d GetMagneticField(const double x, const double y);
 
   protected:
     /// @brief calculate the two-dimensional magnetic field derived from strainght line conductor
-    void calc_field_from_wire(const double r, const double phi, double& br, double& bphi);
+    void calc_field_from_wire(const double r, const double phi, double& az, double& br, double& bphi);
 
     /// @brief calculate the two-dimensional magnetic field using infinite iron yoke model
-    void calc_field_infinite_yoke(const double r, const double phi, const double Rf, const double mu_r, double& br, double& bphi);
+    void calc_field_infinite_yoke(const double r, const double phi, const double Rf, const double mu_r, double& az, double& br, double& bphi);
 
     /// @brief calculate the two-dimensional magnetic field using shell iron yoke model
-    void calc_field_shell_yoke(const double r, const double phi, const double Rf, const double Ra, const double mu_r, double& br, double& bphi);
+    void calc_field_shell_yoke(const double r, const double phi, const double Rf, const double Ra, const double mu_r, double& az, double& br, double& bphi);
 
   private:
     int      fFlag;
